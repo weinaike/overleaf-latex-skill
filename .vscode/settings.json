@@ -1,0 +1,70 @@
+{
+    "terminal.integrated.env.osx": {
+        "PATH": "/usr/local/texlive/2025basic/bin/universal-darwin:/opt/homebrew/bin:/usr/local/bin:${env:PATH}"
+    },
+    "terminal.integrated.env.linux": {
+        "PATH": "/usr/local/texlive/2025basic/bin/x86_64-linux:/usr/bin:/usr/local/bin:${env:PATH}"
+    },
+    "terminal.integrated.env.windows": {
+        "PATH": "C:\\texlive\\2025basic\\bin\\win32;${env:PATH}"
+    },
+    "latex-workshop.latex.tools": [
+        {
+            "name": "pdflatex",
+            "command": "/usr/local/texlive/2025basic/bin/universal-darwin/pdflatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ]
+        },
+        {
+            "name": "bibtex", 
+            "command": "/usr/local/texlive/2025basic/bin/universal-darwin/bibtex",
+            "args": [
+                "%DOCFILE%"
+            ]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "pdflatex -> bibtex -> pdflatex*2",
+            "tools": [
+                "pdflatex",
+                "bibtex",
+                "pdflatex",
+                "pdflatex"
+            ]
+        },
+        {
+            "name": "pdflatex",
+            "tools": [
+                "pdflatex"
+            ]
+        }
+    ],
+    "latex-workshop.view.pdf.viewer": "tab",
+    "latex-workshop.latex.clean.fileTypes": [
+        "*.aux",
+        "*.bbl",
+        "*.blg",
+        "*.idx",
+        "*.ind",
+        "*.lof",
+        "*.lot",
+        "*.out",
+        "*.toc",
+        "*.acn",
+        "*.acr",
+        "*.alg",
+        "*.glg",
+        "*.glo",
+        "*.gls",
+        "*.ist",
+        "*.fls",
+        "*.log",
+        "*.fdb_latexmk",
+        "*.synctex.gz"
+    ]
+}
