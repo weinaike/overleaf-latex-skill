@@ -1,0 +1,82 @@
+% ============================================================
+% AAS journal paper (ApJ / AJ / ApJL / ApJS / PSJ) — AASTeS v7.
+% The class and .bst ship with this scaffold because AASTeS is
+% not part of standard TeX distributions; keep them next to the
+% manuscript when submitting.
+%
+% Class options (combine freely):
+%   twocolumn    final published look (most compact)
+%   manuscript   12pt, double spaced, for review
+%   preprint     12pt single column, single spaced
+%   linenumbers  MANDATORY for AAS submission and revisions
+%   anonymous    dual-anonymous review (hides authors, acks)
+%   trackchanges highlight \added / \replaced / \deleted text
+% AASTeS loads hyperref itself — do not reload it.
+% ============================================================
+\documentclass[linenumbers,twocolumn]{aastex701}
+
+% Custom macros go here (before \begin{document})
+\newcommand\aastex{AAS\TeX}
+\newcommand\latex{La\TeX}
+
+% ---- Running heads (short title / short author list) ----
+\shorttitle{Your Short Title}
+\shortauthors{Author, F., et al.}
+
+% ---- Submission dates / target journal (uncomment at submission) ----
+% \received{February 1, 2026}
+% \revised{March 1, 2026}
+% \accepted{\today}
+% \submitjournal{ApJ}
+
+\begin{document}
+
+% ---- Title ----
+\title{Your Paper Title Here}
+
+% ---- Authors: each needs \author + \affiliation + \email ----
+% Optional metadata (ORCID etc.):
+% \author[orcid=0000-0000-0000-0000,gname=First,sname=Author]{First Author}
+\author{First Author}
+\affiliation{Example University, City, Country}
+\email{first.author@example.com}
+
+\author{Second Author}
+\affiliation{Example University, City, Country}
+\email{second.author@example.com}
+
+% For large teams: \collaboration[all]{(Example Collaboration)}
+
+% ---- Abstract and keywords (chapters/abstract.tex) ----
+\input{chapters/abstract}
+
+% ---- Body: astronomy structure (venue-specific chapters) ----
+\input{chapters/introduction}
+\input{chapters/data}
+\input{chapters/method}
+\input{chapters/validation}
+\input{chapters/results}
+\input{chapters/discussion}
+\input{chapters/summary}
+
+% ---- Acknowledgments (auto-anonymized with the anonymous option) ----
+\begin{acknowledgments}
+We thank ...
+\end{acknowledgments}
+
+% ---- Facilities and software (checked at copy editing) ----
+\facilities{Facility keyword(Instrument)}
+
+% \software{astropy \citep{2022ApJ...935..167A}, OurCode(v1.0, \url{https://example.com/code})}
+
+% ---- Appendix: one \appendix command, then \section per appendix ----
+\appendix
+\section{Appendix Title}
+% Long tables, extra figures, derivations that would break the
+% main flow. Equation numbers reset to (A1), (A2), ...
+
+% ---- Bibliography (style file ships with this scaffold) ----
+\bibliography{references}{}
+\bibliographystyle{aasjournalv7}
+
+\end{document}

@@ -1,0 +1,57 @@
+% ============================================================
+% arXiv preprint — plain article class.
+% No page limit, hyperlinked (blue links are the arXiv norm).
+% Use this template for preprints, workshop papers without a
+% mandated class, or a single-column reading-friendly version
+% of a paper. It is NOT a substitute for a venue's camera-ready
+% class — when the paper is accepted, port to that venue's
+% template.
+% ============================================================
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{subfig}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+\usepackage[numbers,sort&compress]{natbib}
+
+\begin{document}
+
+% ---- Title and authors ----
+\title{Your Paper Title Here}
+
+\author{%
+  First Author\thanks{Example University, email@example.com} \and
+  Second Author\thanks{Example University, email@example.com}
+}
+
+\date{} % empty group = no date line; use \date{October 2026} if wanted
+
+\maketitle
+
+% ---- Abstract (chapters/abstract.tex) ----
+\input{chapters/abstract}
+
+% ---- Body ----
+\input{chapters/introduction}
+\input{chapters/background}
+\input{chapters/methodology}
+\input{chapters/evaluation}
+\input{chapters/threats}
+\input{chapters/conclusion}
+
+\section*{Acknowledgment}
+The authors would like to thank...
+
+% ---- Bibliography ----
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

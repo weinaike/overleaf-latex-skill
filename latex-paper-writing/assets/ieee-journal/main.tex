@@ -1,0 +1,62 @@
+% ============================================================
+% IEEE journal paper — IEEEtran journal mode.
+% Journals have no hard page limit but expect thorough
+% treatment; add experiments/appendices a conference version
+% could not fit. Running heads are set via \markboth below.
+% ============================================================
+\documentclass[journal]{IEEEtran}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{cite}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{subfig}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+% ---- Title ----
+\title{Your Paper Title Here}
+
+% ---- Running head: journal name / shortened author-title ----
+\markboth{IEEE Transactions on Example}%
+{Author \MakeLowercase{\textit{et al.}}: Your Short Title Here}
+
+% ---- Journal-style author block ----
+\author{First~Author, Second~Author, and Third~Author%
+\thanks{Manuscript received ...; revised .... (F. Author, e-mail: email@example.com.)}}
+
+\maketitle
+
+% ---- Abstract and keywords ----
+\input{chapters/abstract}
+
+% Journal convention: the FIRST paragraph of the introduction
+% starts with a drop cap, e.g.
+%   \IEEEPARstart{W}{ith} the growth of ...
+% Replace the first sentence of chapters/introduction.tex
+% accordingly (the IEEEtran class provides \IEEEPARstart).
+
+\input{chapters/introduction}
+\input{chapters/background}
+\input{chapters/methodology}
+\input{chapters/evaluation}
+\input{chapters/threats}
+\input{chapters/conclusion}
+
+\section*{Acknowledgment}
+The authors would like to thank...
+
+% ---- Bibliography ----
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

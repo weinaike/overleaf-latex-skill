@@ -1,0 +1,72 @@
+% ============================================================
+% ACM conference paper — acmart sigconf.
+% IMPORTANT acmart differences from IEEEtran:
+%   - abstract/keywords/CCS come BEFORE \maketitle
+%   - authors use \author + \affiliation + \email blocks
+%   - acmart handles fonts, hyperref, and spacing itself —
+%     do not add geometry/setspace hacks
+% Submission flags: add [sigconf,review,anonymous] for
+% double-blind submission; plain [sigconf] for camera-ready.
+% ============================================================
+\documentclass[sigconf]{acmart}
+
+\usepackage{amsmath,amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{subfig}
+
+% ---- CCS concepts: regenerate at https://dl.acm.org/ccs ----
+% (ACM requires real CCS categories; the ones below are filler.)
+\begin{CCSXML}
+<ccs2012>
+<concept>
+<concept_id>10003120.10003121</concept_id>
+<concept_desc>Human-centered computing~HCI</concept_desc>
+<concept_significance>500</concept_significance>
+</concept>
+</ccs2012>
+\end{CCSXML}
+
+\begin{document}
+
+% ---- Title ----
+\title{Your Paper Title Here}
+
+% ---- Authors ----
+\author{First Author}
+\authornote{Both authors contributed equally to this research.}
+\email{first.author@example.com}
+\affiliation{%
+  \institution{Example University}
+  \city{City}
+  \country{Country}
+}
+
+\author{Second Author}
+\email{second.author@example.com}
+\affiliation{%
+  \institution{Example University}
+  \city{City}
+  \country{Country}
+}
+
+% ---- Abstract, keywords, CCS — MUST precede \maketitle ----
+\input{chapters/abstract}
+
+\maketitle
+
+% ---- Body ----
+\input{chapters/introduction}
+\input{chapters/background}
+\input{chapters/methodology}
+\input{chapters/evaluation}
+\input{chapters/threats}
+\input{chapters/conclusion}
+
+% ---- Bibliography (ACM reference format) ----
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+
+\end{document}

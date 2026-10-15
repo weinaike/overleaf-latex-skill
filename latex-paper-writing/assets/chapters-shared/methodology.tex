@@ -1,0 +1,69 @@
+% ============================================================
+% Methodology. A reviewer should be able to re-implement the
+% core of the method from this section alone. Structure:
+% overview (with figure) → formalism → algorithm → details.
+% Every design choice gets a WHY, not just a what.
+% ============================================================
+\section{Methodology}
+\label{sec:methodology}
+
+\subsection{Overview}
+\label{subsec:overview}
+
+% 1–2 paragraphs walking through the whole approach at a high
+% level, ideally referencing an architecture figure. Describe
+% the pipeline stages and how data flows between them:
+%
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=\linewidth]{figures/overview.pdf}
+%     \caption{Overview of the proposed approach. ...}
+%     \label{fig:overview}
+% \end{figure}
+%
+% End with a roadmap: "Section~\ref{subsec:formulation} formalizes
+% the problem; Section~\ref{subsec:algorithm} details the
+% algorithm; Section~\ref{subsec:implementation} discusses
+% implementation."
+Give the reader the shape of the approach before the details.
+
+\subsection{Problem Formulation}
+\label{subsec:formulation}
+
+% Formalize inputs, outputs, and objective. Define notation once
+% here (or in a notation table) and use it consistently:
+% \begin{equation}
+%     \label{eq:objective}
+%     \hat{\theta} = \arg\min_{\theta} \; \mathcal{L}(\theta; \mathcal{D})
+% \end{equation}
+
+\subsection{Proposed Algorithm}
+\label{subsec:algorithm}
+
+% The core contribution. Present the algorithm in pseudocode
+% when it has non-trivial control flow:
+%
+% \begin{algorithm}[htbp]
+%     \caption{Proposed Method}
+%     \label{alg:proposed}
+%     \begin{algorithmic}[1]
+%         \Require input data $\mathcal{D}$, parameters $\lambda$
+%         \Ensure trained model $M$
+%         \State initialize $\theta$ randomly
+%         \For{$t = 1$ to $T$}
+%             \State sample mini-batch $B \subset \mathcal{D}$
+%             \State update $\theta \gets \theta - \eta \nabla \mathcal{L}_B(\theta)$
+%         \EndFor
+%         \State \Return $M$
+%     \end{algorithmic}
+% \end{algorithm}
+%
+% After the pseudocode, walk through the key steps in prose and
+% state time/space complexity if it matters to the claims.
+
+\subsection{Implementation Details}
+\label{subsec:implementation}
+
+% Hyperparameters, libraries, hardware, engineering choices that
+% affect reproducibility — and the REASON for each non-obvious
+% choice. Full configs belong in an artifact/appendix, not here.

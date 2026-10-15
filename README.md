@@ -1,147 +1,51 @@
-# LaTeX论文项目
+# papers_latex_template
 
-这是一个使用LaTeX撰写的学术论文项目，采用IEEE会议论文格式。
+A LaTeX research-paper writing toolkit built around a Claude Code skill. It scaffolds a paper project for IEEE conference, IEEE journal, ACM, arXiv, or AAS/astronomy journals (AASTeS); drafts and revises sections; manages BibTeX citations; compiles the PDF and diagnoses LaTeX errors; and runs pre-submission checks.
 
-## 项目结构
+Two layers:
 
-```
-├── main.tex                    # 主文件，包含文档类、包导入和整体结构
-├── references.bib             # 参考文献数据库
-├── chapters/                  # 各章节内容目录
-│   ├── abstract.tex          # 摘要和关键词
-│   ├── introduction.tex      # 引言
-│   ├── background.tex        # 背景和相关工作
-│   ├── methodology.tex       # 方法论
-│   ├── evaluation.tex        # 评估实验
-│   ├── threats.tex           # 有效性威胁
-│   └── conclusion.tex        # 结论
-└── README.md                 # 项目说明文档
-```
+- **`latex-paper-writing/`** — the skill itself. Its operating manual is [`latex-paper-writing/SKILL.md`](latex-paper-writing/SKILL.md).
+- **`.claude/skills/latex-paper-writing`** — a relative symlink wiring the skill into this repo, so Claude Code picks it up whenever you work here.
 
-## 编译说明
+To use the skill in other projects, symlink it into your personal skills:
 
-### 推荐方式：直接使用命令行 🚀
-
-**快速编译**（推荐日常使用）
 ```bash
-pdflatex main.tex
+ln -s "$(pwd)/latex-paper-writing" ~/.claude/skills/latex-paper-writing
 ```
 
-**完整编译**（首次编译或有新参考文献时）
+Requires a TeX installation (`pdflatex`, `bibtex`) and bash. Verify with `latex-paper-writing/scripts/check_latex_env.sh`. Note: the ACM template additionally needs the Libertine fonts (`texlive-fonts-extra` on Debian/Ubuntu).
+
+## Layout
+
+```
+├── README.md                   # this file
+├── .claude/skills/latex-paper-writing -> ../../latex-paper-writing
+└── latex-paper-writing/        # the skill
+    ├── SKILL.md                # when the skill triggers + the workflows it runs
+    ├── assets/
+    │   ├── chapters-shared/    # CS/ML section skeletons w/ paragraph-level writing guides
+    │   ├── references.bib      # sample BibTeX database (shared)
+    │   ├── ieee-conference/    # IEEEtran conference template (main.tex + abstract.tex)
+    │   ├── ieee-journal/       # IEEEtran journal template
+    │   ├── acm-sigconf/        # acmart sigconf template
+    │   ├── arxiv/              # single-column article preprint template
+    │   └── aas-journal/        # AASTeS v7 (ApJ/AJ/...): own chapter set + bundled cls/bst
+    ├── scripts/
+    │   ├── new_paper.sh        # scaffold: new_paper.sh <venue> <dir> [--title "..."]
+    │   ├── compile.sh          # compile: compile.sh <dir> [quick|full] — extracts real errors from the log
+    │   └── check_latex_env.sh  # diagnose a missing/broken TeX installation
+    └── references/             # loaded on demand (see SKILL.md's table)
+        ├── writing-guide.md    # per-section writing methodology + revision checklist
+        ├── venue-style.md      # per-venue format rules, page limits, anonymization
+        ├── bibtex-guide.md     # citations: sourcing real entries, hygiene, bug table
+        └── common-errors.md    # compile error meanings, clean rebuild, TeX setup
+```
+
+## Quick start (without Claude)
+
 ```bash
-pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
+latex-paper-writing/scripts/new_paper.sh ieee-conference ~/papers/my-paper --title "Frobnicated Learning for Widgets"
+latex-paper-writing/scripts/compile.sh ~/papers/my-paper      # verify the baseline compiles
+$EDITOR ~/papers/my-paper/chapters/                           # each skeleton explains what to write
+latex-paper-writing/scripts/compile.sh ~/papers/my-paper full # after adding citations / before shipping
 ```
-
-> **为什么要运行多次？**
-> 1. **第1次 pdflatex**：生成基本PDF，创建引用信息文件(.aux)
-> 2. **bibtex**：处理参考文献，生成格式化的参考文献列表(.bbl)  
-> 3. **第2次 pdflatex**：插入参考文献到PDF中
-> 4. **第3次 pdflatex**：解决所有交叉引用，确保页码等信息正确
-
-**简化版本**（如果确定引用都正确）
-```bash
-pdflatex main.tex && bibtex main && pdflatex main.tex
-```
-
-**清理临时文件**
-```bash
-rm -f *.aux *.bbl *.blg *.log *.out *.toc *.synctex.gz *.fls *.fdb_latexmk
-```
-
-### 📝 编译策略建议
-
-**日常写作**：只用快速编译
-```bash
-pdflatex main.tex  # 适合预览内容变化
-```
-
-**添加新引用后**：用完整编译
-```bash
-pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
-```
-
-**解决编译问题**：先清理再编译
-```bash
-rm -f *.aux *.bbl *.blg *.log && pdflatex main.tex && bibtex main && pdflatex main.tex && pdflatex main.tex
-```
-
-**最终提交前**：确保用完整编译检查所有引用
-
-## 章节说明
-
-- **Abstract**: 论文摘要和关键词
-- **Introduction**: 问题介绍、动机和贡献
-- **Background & Related Work**: 技术背景和相关研究综述
-- **Methodology**: 提出的方法和算法描述
-- **Evaluation**: 实验设置、结果和分析
-- **Threats to Validity**: 研究有效性威胁分析
-- **Conclusion**: 总结和未来工作
-
-## 使用指南
-
-1. 在`main.tex`中修改论文标题、作者信息
-2. 在`chapters/`目录下的对应文件中编写各章节内容
-3. 在`references.bib`中添加参考文献
-4. 使用提供的VS Code任务或命令行进行编译
-
-## 注意事项
-
-- 图片文件建议放在单独的`figures/`目录中
-- 表格和图片的标签要与文中引用保持一致
-- 参考文献使用BibTeX格式管理
-
-## IEEE论文格式要求
-
-✅ 使用 `\documentclass[10pt,conference]{IEEEtran}`  
-✅ 标题使用24pt字体（由IEEEtran自动处理）  
-✅ 正文使用10pt字体  
-✅ 页数限制：10页内容 + 2页参考文献  
-
-## LaTeX环境配置
-
-### 跨平台支持 🌍
-本项目已配置跨平台兼容的VS Code设置，支持：
-- **macOS**: `/usr/local/texlive/2025basic/bin/universal-darwin`
-- **Linux**: `/usr/local/texlive/2025basic/bin/x86_64-linux` 
-- **Windows**: `C:\texlive\2025basic\bin\win32`
-
-详细跨平台配置说明请查看：[`.vscode/CROSS-PLATFORM.md`](.vscode/CROSS-PLATFORM.md)
-
-### 快速检测环境
-```bash
-# 运行环境检测脚本（推荐）
-./check-latex-env.sh
-
-# 或手动检查
-which pdflatex
-pdflatex --version
-```
-
-### 系统级PATH设置（可选）
-
-**macOS/Linux**
-```bash
-# 添加到 ~/.zshrc 或 ~/.bashrc
-export PATH="/usr/local/texlive/2025basic/bin/universal-darwin:$PATH"  # macOS
-export PATH="/usr/local/texlive/2025basic/bin/x86_64-linux:$PATH"     # Linux
-```
-
-**Windows**
-在系统环境变量中添加对应的TeX Live bin目录
-
-### VS Code扩展
-推荐安装LaTeX Workshop扩展，它提供：
-- 自动编译
-- PDF预览
-- 语法高亮
-- 智能补全
-- 错误检查
-
-## 准备提交
-
-提交前检查清单：
-1. 编译生成PDF文件
-2. 检查页数限制（10页+2页参考文献）  
-3. 确保所有引用正确
-4. 检查格式符合IEEE要求
-5. 通过相应平台上传PDF

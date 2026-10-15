@@ -1,0 +1,69 @@
+% ============================================================
+% Evaluation. Organize around research questions (RQs); every
+% table/figure answers exactly one RQ, and every RQ is answered.
+% Numbers never stand alone — each gets an interpretation.
+% ============================================================
+\section{Evaluation}
+\label{sec:evaluation}
+
+% State the research questions up front; they structure the
+% whole section:
+% \begin{itemize}
+%     \item \textbf{RQ1:} How does the proposed method compare with state-of-the-art baselines?
+%     \item \textbf{RQ2:} How does each component contribute to overall performance?
+%     \item \textbf{RQ3:} How sensitive is the method to parameter X?
+% \end{itemize}
+
+\subsection{Experimental Setup}
+\label{subsec:setup}
+
+% Enough detail for independent replication:
+%   - Datasets: source, size, splits, preprocessing, license
+%   - Baselines: which, versions/configs, why they are the right comparisons
+%   - Metrics: definitions with citations; how ties/edge cases count
+%   - Environment: hardware, software versions (briefly)
+%   - Statistical treatment: runs, error bars, significance tests
+
+\subsection{Overall Performance (RQ1)}
+\label{subsec:results}
+
+% Main comparison table. Use booktabs rules (no vertical lines),
+% bold the best result, and order rows meaningfully (by score,
+% or baselines-then-ours):
+\begin{table}[htbp]
+    \caption{Comparison with baselines. Best results in \textbf{bold}.}
+    \label{tab:main-results}
+    \centering
+    \begin{tabular}{lccc}
+        \toprule
+        Method & Accuracy & F1 & Time (s) \\
+        \midrule
+        Baseline A \cite{example2023} & 85.2 & 84.1 & 1.2 \\
+        Baseline B \cite{conference2022} & 87.5 & 86.8 & 2.1 \\
+        \textbf{Ours} & \textbf{91.3} & \textbf{90.7} & 1.8 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+% Then interpret: not just "ours is better" but WHY, tied back
+% to the mechanism in Section~\ref{sec:methodology}, and WHERE
+% it wins/loses (per-dataset or per-category breakdown).
+
+\subsection{Ablation Study (RQ2)}
+\label{subsec:ablation}
+
+% Remove/disable each component one at a time and measure the
+% drop. This is where the design choices from the methodology
+% get validated — or honestly refuted.
+
+\subsection{Parameter Sensitivity (RQ3)}
+\label{subsec:sensitivity}
+
+% Vary the key hyperparameter(s) and show stability. A line
+% chart works well:
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=\linewidth]{figures/sensitivity.pdf}
+%     \caption{Accuracy as a function of $\lambda$.}
+%     \label{fig:sensitivity}
+% \end{figure}

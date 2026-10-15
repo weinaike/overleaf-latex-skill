@@ -1,28 +1,34 @@
+% ============================================================
+% IEEE conference paper — IEEEtran conference mode.
+% Typical limits: 10 pages of content + 2 pages of references
+% (check the actual CFP — they vary).
+% Double-blind venue? Remove the author block and check
+% references/venue-style.md for anonymization rules.
+% ============================================================
 \documentclass[10pt,conference]{IEEEtran}
 
-% 必要的包
 \usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
-\usepackage{url}
 \usepackage{cite}
 \usepackage{array}
 \usepackage{multirow}
 \usepackage{booktabs}
-\usepackage{subfigure}
+\usepackage{subfig}
 
-% 定义一些有用的命令
+% Useful macro for mentioning BibTeX itself
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 \begin{document}
 
-% 论文标题（24pt字体，已由IEEEtran自动处理）
+% ---- Title ----
 \title{Your Paper Title Here}
 
-% 作者信息
+% ---- Authors (fill in real names; do not submit placeholders) ----
 \author{
 \IEEEauthorblockN{First Author}
 \IEEEauthorblockA{\textit{Affiliation} \\
@@ -39,28 +45,22 @@ email@example.com}
 
 \maketitle
 
-% 摘要和关键词
+% ---- Abstract and keywords (chapters/abstract.tex) ----
 \input{chapters/abstract}
 
-% 正文开始
+% ---- Body (order matches the shared skeleton; adjust as needed) ----
 \input{chapters/introduction}
-
 \input{chapters/background}
-
 \input{chapters/methodology}
-
 \input{chapters/evaluation}
-
 \input{chapters/threats}
-
 \input{chapters/conclusion}
 
-% 致谢
+% ---- Acknowledgment (omit entirely for double-blind review) ----
 \section*{Acknowledgment}
-
 The authors would like to thank...
 
-% 参考文献 - 使用BibTeX
+% ---- Bibliography ----
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 
