@@ -1,6 +1,6 @@
-# papers_latex_template
+# overleaf-latex-skill
 
-A LaTeX research-paper writing toolkit built around a Claude Code skill. It scaffolds a paper project for IEEE conference, IEEE journal, ACM, arXiv, or AAS/astronomy journals (AASTeS); drafts and revises sections; manages BibTeX citations; compiles the PDF and diagnoses LaTeX errors; and runs pre-submission checks.
+A Claude Code skill for LaTeX research-paper writing — an Overleaf-style paper workflow in your terminal. It scaffolds a paper project for IEEE conference, IEEE journal, ACM, arXiv, or AAS/astronomy journals (AASTeS); drafts and revises sections; manages BibTeX citations; compiles the PDF and diagnoses LaTeX errors; and runs pre-submission checks.
 
 Two layers:
 
