@@ -7,11 +7,18 @@ Two layers:
 - **`latex-paper-writing/`** — the skill itself. Its operating manual is [`latex-paper-writing/SKILL.md`](latex-paper-writing/SKILL.md).
 - **`.claude/skills/latex-paper-writing`** — a relative symlink wiring the skill into this repo, so Claude Code picks it up whenever you work here.
 
-To use the skill in other projects, symlink it into your personal skills:
+## Works with
 
-```bash
-ln -s "$(pwd)/latex-paper-writing" ~/.claude/skills/latex-paper-writing
-```
+The skill follows the open [Agent Skills](https://agentskills.io) format (`SKILL.md` + YAML frontmatter), so any compatible agent can load it. `install.sh` wires it into yours — auto-detecting what you have installed:
+
+| Agent | Install |
+|---|---|
+| Claude Code | `./install.sh --agent claude` |
+| OpenAI Codex | `./install.sh --agent codex` |
+| Gemini CLI | `./install.sh --agent gemini` |
+| Everything above | `./install.sh` |
+
+Claude Code and Gemini CLI get a live symlink; Codex gets a **copy** (its skill discovery does not reliably follow symlinks — re-run the installer after pulling updates, and start a new Codex session). `./install.sh --remove` uninstalls. Gemini CLI can also install straight from this repo: `gemini skills install <repo-url> --path latex-paper-writing`.
 
 Requires a TeX installation (`pdflatex`, `bibtex`) and bash. Verify with `latex-paper-writing/scripts/check_latex_env.sh`. Note: the ACM template additionally needs the Libertine fonts (`texlive-fonts-extra` on Debian/Ubuntu).
 
@@ -19,6 +26,8 @@ Requires a TeX installation (`pdflatex`, `bibtex`) and bash. Verify with `latex-
 
 ```
 ├── README.md                   # this file
+├── AGENTS.md                   # guidance for coding agents working in this repo
+├── install.sh                  # install the skill into Claude Code / Codex / Gemini CLI
 ├── .claude/skills/latex-paper-writing -> ../../latex-paper-writing
 └── latex-paper-writing/        # the skill
     ├── SKILL.md                # when the skill triggers + the workflows it runs
