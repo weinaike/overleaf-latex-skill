@@ -3,222 +3,269 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>latex-paper-writing — an agent skill for research papers in LaTeX</title>
+<title>latex-paper-writing — write research papers in your coding agent</title>
 <meta name="description" content="Open agent skill that scaffolds IEEE/ACM/arXiv/AAS papers, drafts sections, manages BibTeX, compiles and debugs LaTeX, and runs pre-submission checks. Works with Claude Code, Codex, and Gemini CLI.">
-<meta property="og:title" content="latex-paper-writing — an agent skill for research papers in LaTeX">
+<meta property="og:title" content="latex-paper-writing — write research papers in your coding agent">
 <meta property="og:description" content="Turn your coding agent into an end-to-end research-paper assistant: venue-correct scaffolds, section drafting, BibTeX, compile-and-fix, pre-submission checks.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://weinaike.github.io/overleaf-latex-skill/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%231C1B18'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='34' text-anchor='middle' fill='%23FCFCF9'%3ET%3Ctspan dy='7' font-size='25'%3Ee%3C/tspan%3Etspan dy='-7'%3EX%3C/tspan%3E%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232020C8'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='32' text-anchor='middle' fill='white'%3ET%3Ctspan dy='7' font-size='24'%3Ee%3C/tspan%3Ctspan dy='-7'%3EX%3C/tspan%3E%3C/text%3E%3C/svg%3E">
 <link rel="canonical" href="https://weinaike.github.io/overleaf-latex-skill/">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap">
 <style>
 :root{
-  --paper:#FCFCF9; --ink:#1C1B18; --muted:#6E6B62;
-  --rule:#D9D6CC; --rule-heavy:#1C1B18;
-  --link:#2020C8; --code-bg:#F4F2EB; --code-ink:#22211D;
-  --stamp:#8A877C; --select:rgba(32,32,200,.16);
+  --bg:#FFFFFF; --bg-soft:#F6F6F3; --ink:#191917; --muted:#66645C;
+  --line:#E4E2DB; --accent:#2626D4; --accent-ink:#FFFFFF;
+  --code-bg:#14140F; --code-ink:#EDEBE0; --code-dim:#8B897C;
+  --chip:#FFFFFF;
 }
 @media (prefers-color-scheme: dark){
   :root{
-    --paper:#171613; --ink:#E7E4DB; --muted:#9A968A;
-    --rule:#3B3931; --rule-heavy:#C9C6BB;
-    --link:#9797FF; --code-bg:#201F1A; --code-ink:#DDDACF;
-    --stamp:#6E6B60; --select:rgba(151,151,255,.22);
+    --bg:#131311; --bg-soft:#1B1B17; --ink:#EBE8DF; --muted:#9C998D;
+    --line:#32302A; --accent:#9494F5; --accent-ink:#101022;
+    --code-bg:#0D0D0A; --code-ink:#E6E4D8; --code-dim:#7C7A6E;
+    --chip:#1B1B17;
   }
 }
 *{ box-sizing:border-box }
 html{ -webkit-text-size-adjust:100% }
 body{
-  margin:0; background:var(--paper); color:var(--ink);
-  font-family:"STIX Two Text", Georgia, "Times New Roman", serif;
-  font-size:17px; line-height:1.62;
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size:16.5px; line-height:1.6;
 }
-::selection{ background:var(--select) }
-main{
-  max-width:70ch; margin:0 auto; padding:3.2rem 1.4rem 2.5rem;
-}
-@media (min-width:1150px){ main{ padding-left:6rem } }
-a{ color:var(--link); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.18em }
+::selection{ background:color-mix(in srgb, var(--accent) 22%, transparent) }
+a{ color:var(--accent); text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:.18em }
 a:hover{ text-decoration-thickness:2px }
-sup{ line-height:0 }
-
-/* ---- title block ---- */
-.title-block{ text-align:center; border-top:2.5px solid var(--rule-heavy); padding-top:1.7rem }
-h1{
-  font-size:clamp(1.75rem, 4.6vw, 2.65rem); font-weight:700; line-height:1.16;
-  margin:.15em 0 .55em; letter-spacing:-.005em; text-wrap:balance;
+code, .mono{
+  font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
 }
-.author{ margin:0 }
-.affiliation{ margin:.15em 0 0; font-size:.86em }
-.affiliation a{ font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace; text-decoration:none }
-.affiliation a:hover{ text-decoration:underline }
 
-/* ---- abstract ---- */
-.abstract{
-  margin:1.9rem 5% 0; padding:.85em 0; border-top:1.5px solid var(--rule-heavy); border-bottom:1.5px solid var(--rule-heavy);
-  font-size:.94em; text-align:justify; hyphens:auto;
+.wrap{ max-width:1040px; margin:0 auto; padding:0 1.5rem }
+
+/* ---- header ---- */
+header.site{ border-bottom:1px solid var(--line) }
+.site-inner{ display:flex; align-items:center; justify-content:space-between; padding:.95rem 1.5rem; max-width:1040px; margin:0 auto }
+.wordmark{ font-weight:700; font-size:1rem; color:var(--ink); text-decoration:none; display:flex; align-items:center; gap:.55rem }
+.wordmark:hover{ text-decoration:none }
+.wordmark svg{ display:block }
+.site-github{ font-size:.92rem; font-weight:600 }
+
+/* ---- hero ---- */
+.hero{ text-align:center; padding:4.2rem 1.5rem 4rem }
+.hero h1{
+  font-size:clamp(1.85rem, 4.6vw, 3rem); line-height:1.14; letter-spacing:-.02em;
+  font-weight:750; margin:0 auto .9rem; max-width:21ch; text-wrap:balance;
 }
-.abstract .lbl{ font-weight:700 }
+.hero .sub{ font-size:1.08rem; color:var(--muted); max-width:56ch; margin:0 auto 2.1rem }
+.install{ max-width:640px; margin:0 auto 1.4rem }
+.install-box{
+  background:var(--code-bg); color:var(--code-ink); border-radius:10px;
+  padding:1rem 1.1rem; display:flex; align-items:center; gap:1rem;
+  box-shadow:0 1px 2px rgba(0,0,0,.18);
+}
+.install-box pre{ margin:0; overflow-x:auto; flex:1; text-align:left }
+.install-box code{ font-size:.86rem; line-height:1.75; white-space:pre }
+.install-box .dim{ color:var(--code-dim) }
+.copy-btn{
+  flex:none; font:600 .76rem/1 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color:var(--code-ink); background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.22); border-radius:6px; padding:.5em .85em; cursor:pointer;
+}
+.copy-btn:hover{ border-color:rgba(255,255,255,.5) }
+.copy-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px }
+.hero .hint{ font-size:.85rem; color:var(--muted); margin:0 0 1.8rem }
+.chips{ display:flex; flex-wrap:wrap; gap:.6rem; justify-content:center }
+.chip{
+  display:inline-flex; align-items:center; gap:.5em;
+  font-size:.88rem; font-weight:600; color:var(--ink);
+  background:var(--chip); border:1px solid var(--line); border-radius:999px;
+  padding:.42em 1em;
+}
+.chip .dot{ width:.5em; height:.5em; border-radius:50%; background:var(--accent); flex:none }
 
 /* ---- sections ---- */
-h2{ font-size:1.3rem; font-weight:700; margin:2.3em 0 .55em; line-height:1.25 }
-h2 .num{ display:inline-block; min-width:1.55em }
-.prose p{ margin:.65em 0; text-align:justify; hyphens:auto }
-.prose p + p, .abstract + .prose p:first-child{ text-indent:1.6em }
-h2 + p{ text-indent:0 }
-.cite{ text-decoration:none }
-sup .cite{ padding:0 .1em }
+section{ border-top:1px solid var(--line); padding:3.4rem 0 }
+h2{ font-size:1.5rem; font-weight:720; letter-spacing:-.012em; margin:0 0 .5rem }
+.lead{ color:var(--muted); margin:0 0 2.2rem; max-width:62ch }
 
-/* ---- tables (booktabs) ---- */
-.caption{ font-size:.9em; color:var(--muted); margin:1.6em 0 .35em; text-align:left }
-.caption .lbl{ font-weight:600; color:var(--ink) }
+.grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:0; border-top:1px solid var(--line) }
+.feat{ padding:1.5rem 1.4rem 1.6rem; border-bottom:1px solid var(--line) }
+.feat:nth-child(3n+1){ border-left:0; padding-left:0 }
+.feat:nth-child(3n+2), .feat:nth-child(3n+3){ border-left:1px solid var(--line) }
+.feat h3{ font-size:1rem; font-weight:700; margin:0 0 .4rem }
+.feat p{ margin:0; font-size:.92rem; color:var(--muted) }
+
+/* ---- venues table ---- */
 .tbl-wrap{ overflow-x:auto }
-table{ width:100%; border-collapse:collapse; border-top:2px solid var(--rule-heavy); border-bottom:2px solid var(--rule-heavy); margin:0 0 .4em }
-th{ text-align:left; font-weight:600; padding:.5em 1.4em .35em 0; border-bottom:1px solid var(--rule-heavy); font-size:.95em }
-td{ padding:.45em 1.4em .45em 0; vertical-align:top; font-size:.95em }
-tbody tr:last-child td{ padding-bottom:.7em }
-td code, .prose code{
-  font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
-  font-size:.86em; background:var(--code-bg); padding:.08em .35em; border-radius:2px;
-}
+table{ width:100%; border-collapse:collapse }
+th{ text-align:left; font-size:.8rem; font-weight:600; color:var(--muted); padding:.55em 1.2em .55em 0; border-bottom:1px solid var(--line) }
+td{ padding:.7em 1.2em .7em 0; border-bottom:1px solid var(--line); font-size:.95rem; vertical-align:top }
+tr:last-child td{ border-bottom:0 }
+td code{ font-size:.84em; background:var(--bg-soft); padding:.12em .45em; border-radius:4px }
 
-/* ---- listing ---- */
-.listing-head{ display:flex; align-items:baseline; justify-content:space-between; gap:1em; margin:1.6em 0 .35em }
-.listing-head .caption{ margin:0; flex:1 }
-.copy-btn{
-  font:600 .74em/1.5 ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  letter-spacing:.02em; color:var(--link); background:none;
-  border:1px solid var(--rule); border-radius:2px; padding:.28em .7em; cursor:pointer;
+/* ---- steps ---- */
+.steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.6rem }
+.step{ border-top:2px solid var(--ink); padding-top:1rem }
+.step .n{ font-weight:700; font-size:.85rem; color:var(--accent); margin:0 0 .35rem }
+.step h3{ font-size:1.02rem; margin:0 0 .4rem }
+.step p{ margin:0; font-size:.92rem; color:var(--muted) }
+.step pre{
+  margin:.8rem 0 0; background:var(--bg-soft); border:1px solid var(--line); border-radius:8px;
+  padding:.7em .9em; overflow-x:auto;
 }
-.copy-btn:hover{ border-color:var(--link) }
-.copy-btn:focus-visible{ outline:2px solid var(--link); outline-offset:2px }
-.listing{
-  border:1px solid var(--rule); background:var(--code-bg); color:var(--code-ink);
-  padding:.85em 1em; overflow-x:auto; margin:0 0 .4em;
-}
-.listing code{ font-family:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace; font-size:.86em; background:none; padding:0; white-space:pre }
-.listing .cm{ color:var(--muted) }
+.step code{ font-size:.8rem; white-space:pre }
 
-/* ---- workflow list ---- */
-.flows{ margin:.7em 0 .9em; padding:0; list-style:none }
-.flows li{ position:relative; padding:0 0 .5em 2.4em; text-align:justify; hyphens:auto }
-.flows li::before{
-  content:attr(data-k) "."; position:absolute; left:.55em; font-weight:700;
+/* ---- outro / footer ---- */
+.outro{ text-align:center; padding:3.6rem 1.5rem 3.8rem }
+.outro p{ margin:.2rem 0 }
+.gh-btn{
+  display:inline-block; margin:1.2rem 0 .6rem; font-weight:650; font-size:.95rem;
+  color:var(--accent-ink); background:var(--accent); text-decoration:none;
+  border-radius:8px; padding:.7em 1.4em;
 }
-.flows .k{ font-weight:700 }
+.gh-btn:hover{ text-decoration:none; filter:brightness(1.08) }
+footer.site{ border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; padding:1.4rem 1.5rem; text-align:center }
 
-/* ---- references / footer ---- */
-.refs{ font-size:.92em }
-.refs p{ margin:.45em 0; padding-left:2.3em; text-indent:-2.3em; text-align:left }
-.foot{
-  margin-top:3.2em; border-top:1px solid var(--rule); padding-top:1em;
-  font-size:.8em; color:var(--muted); text-align:center;
+@media (max-width:880px){
+  .grid{ grid-template-columns:1fr 1fr }
+  .feat{ border-left:0 !important; padding-left:0 !important }
+  .feat:nth-child(even){ border-left:1px solid var(--line) !important; padding-left:1.4rem !important }
+  .steps{ grid-template-columns:1fr }
 }
-
-/* ---- margin stamp (arXiv style, wide screens only) ---- */
-.stamp{
-  position:fixed; top:50%; left:clamp(.7rem, 2vw, 1.7rem);
-  transform:translateY(-50%) rotate(180deg);
-  writing-mode:vertical-rl;
-  font-size:.64rem; letter-spacing:.22em; text-transform:uppercase;
-  color:var(--stamp); border:1px solid var(--stamp); border-radius:2px;
-  padding:1.3em .45em; user-select:none; pointer-events:none;
-}
-@media (max-width:1149px){ .stamp{ display:none } }
-
-/* ---- narrow screens: ragged right beats stretched justification ---- */
-@media (max-width:480px){
-  .prose p, .abstract, .flows li{ text-align:left }
+@media (max-width:560px){
+  .grid{ grid-template-columns:1fr }
+  .feat{ border-left:0 !important; padding-left:0 !important }
+  .install-box{ flex-direction:column; align-items:stretch; gap:.7rem }
+  .install-box pre{ align-self:flex-start; width:100% }
+  .copy-btn{ align-self:flex-end; margin-top:-2.4rem }
 }
 </style>
 </head>
 <body>
-<div class="stamp" aria-hidden="true">overleaf-latex-skill&#8202;&middot;&#8202;2026</div>
+
+<header class="site">
+  <div class="site-inner">
+    <a class="wordmark" href="https://weinaike.github.io/overleaf-latex-skill/">
+      <svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="12" fill="#2626D4"/><text x="32" y="43" font-family="Georgia,serif" font-size="32" text-anchor="middle" fill="#fff">T<tspan dy="7" font-size="24">e</tspan><tspan dy="-7">X</tspan></text></svg>
+      latex-paper-writing
+    </a>
+    <a class="site-github" href="https://github.com/weinaike/overleaf-latex-skill">GitHub</a>
+  </div>
+</header>
 
 <main>
-  <header class="title-block">
-    <h1>latex-paper-writing: an agent skill for research paper writing in LaTeX</h1>
-    <p class="author">weinaike</p>
-    <p class="affiliation"><a href="https://github.com/weinaike/overleaf-latex-skill">github.com/<wbr>weinaike/<wbr>overleaf-<wbr>latex-<wbr>skill</a></p>
-  </header>
-
-  <div class="abstract">
-    <span class="lbl">Abstract&mdash;</span>latex-paper-writing is an open agent skill that turns a coding agent into an end-to-end research-paper assistant. Given a venue, it scaffolds the project with the genuine class files (IEEEtran, acmart, AASTeX), drafts and revises sections against per-venue writing methodology, manages BibTeX citations, compiles the PDF and reports the real errors from the log in plain language, and runs pre-submission checks for page limits and camera-ready rules. It installs into Claude Code, OpenAI Codex, and Gemini CLI with one command <a class="cite" href="#installation">[&sect;2]</a>.
+  <div class="hero">
+    <h1>Write your next paper inside your coding agent</h1>
+    <p class="sub">latex-paper-writing scaffolds the project for your venue, drafts and revises sections, manages BibTeX, compiles the PDF, and checks you are ready to submit.</p>
+    <div class="install">
+      <div class="install-box">
+        <pre id="install-cmd"><code>git clone https://github.com/weinaike/overleaf-latex-skill.git
+cd overleaf-latex-skill <span class="dim">&amp;&amp;</span> ./install.sh</code></pre>
+        <button class="copy-btn" type="button" data-copy="#install-cmd">copy</button>
+      </div>
+      <p class="hint">Auto-detects your agents. No configuration.</p>
+    </div>
+    <div class="chips" aria-label="Works with">
+      <span class="chip"><span class="dot"></span>Claude Code</span>
+      <span class="chip"><span class="dot"></span>OpenAI Codex</span>
+      <span class="chip"><span class="dot"></span>Gemini CLI</span>
+    </div>
   </div>
 
-  <article class="prose">
-    <h2><span class="num">1</span>Introduction</h2>
-    <p>Writing a paper is a loop: set up the template, draft a section, chase a citation, compile, read the log, repeat. Each step is small; the context switching is what costs a week. This skill moves the whole loop into the coding agent you already have open, so the distance between &ldquo;new idea&rdquo; and &ldquo;submitted PDF&rdquo; is a conversation.</p>
-    <p>The skill follows the open Agent Skills format <a class="cite" href="#refs">[2]</a>: a <code>SKILL.md</code> operating manual plus the scripts, templates, and reference documents it calls for. Any compatible agent can load it, and the bundled installer wires it into Claude Code, OpenAI Codex, and Gemini CLI <a class="cite" href="#refs">[1]</a>.</p>
-    <p>The templates are the genuine article: IEEEtran for IEEE conference and journal papers, acmart for ACM sigconf, AASTeX&nbsp;v7 for AAS journals (class files bundled, since TeX&nbsp;Live does not ship them), and a clean single-column article for arXiv preprints. Writing guidance is baked into the scaffold itself &mdash; every section skeleton carries paragraph-level instructions as comments &mdash; and deeper methodology is loaded on demand instead of upfront.</p>
-
-    <h2 id="installation"><span class="num">2</span>Installation</h2>
-    <p>Clone the repository and run the installer. It detects which agents are installed on your machine and wires the skill into each one (Listing&nbsp;1).</p>
-
-    <div class="listing-head">
-      <p class="caption"><span class="lbl">Listing 1:</span> Install into every agent you have.</p>
-      <button class="copy-btn" type="button" data-copy="#install-cmd">copy</button>
+  <section>
+    <div class="wrap">
+      <h2>What it does</h2>
+      <p class="lead">One skill covers the whole loop, so you stay in one conversation from blank page to submitted PDF.</p>
+      <div class="grid">
+        <div class="feat">
+          <h3>Real venue templates</h3>
+          <p>IEEE conference, IEEE journal, ACM sigconf, arXiv, and AAS journals — using the genuine class files, with AASTeX bundled.</p>
+        </div>
+        <div class="feat">
+          <h3>Section drafting</h3>
+          <p>Every section skeleton explains what each paragraph is for. Drafting and revising follow per-venue methodology.</p>
+        </div>
+        <div class="feat">
+          <h3>BibTeX citations</h3>
+          <p>Sources real entries, keeps the database clean, and fixes broken citations.</p>
+        </div>
+        <div class="feat">
+          <h3>Compile and fix</h3>
+          <p>Builds the PDF and pulls the actual errors out of the log in plain language.</p>
+        </div>
+        <div class="feat">
+          <h3>Pre-submission checks</h3>
+          <p>Page limits, anonymization, and camera-ready rules for your venue.</p>
+        </div>
+        <div class="feat">
+          <h3>Loads only what it needs</h3>
+          <p>Writing guides, venue style rules, and error references are read on demand — never all at once.</p>
+        </div>
+      </div>
     </div>
-    <pre class="listing" id="install-cmd"><code>git clone https://github.com/weinaike/overleaf-latex-skill.git
-cd overleaf-latex-skill
-./install.sh              <span class="cm"># auto-detect; or: --agent claude | codex | gemini</span></code></pre>
+  </section>
 
-    <p>Claude Code and Gemini CLI receive a live symlink; Codex receives a copy and discovers it when a new session starts (Table&nbsp;1). To remove it later, run <code>./install.sh --remove</code>. The installer refuses to overwrite anything it does not recognize as this skill.</p>
-
-    <p class="caption"><span class="lbl">Table 1:</span> Where the skill lands, per agent.</p>
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr><th>Agent</th><th>Method</th><th>Notes</th></tr></thead>
-        <tbody>
-          <tr><td>Claude Code</td><td><code>~/.claude/skills/</code>, symlink</td><td>Live &mdash; edits in the repo apply immediately</td></tr>
-          <tr><td>OpenAI Codex</td><td><code>~/.codex/skills/</code>, copy</td><td>Re-run the installer after updates; new sessions only</td></tr>
-          <tr><td>Gemini CLI</td><td><code>~/.gemini/skills/</code>, symlink</td><td>Or native: <code>gemini skills install &lt;repo&gt; --path latex-paper-writing</code></td></tr>
-        </tbody>
-      </table>
+  <section>
+    <div class="wrap">
+      <h2>Venues</h2>
+      <p class="lead">Pick a venue and the scaffold matches it — class file, section structure, and style rules included.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Venue</th><th>Class</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>IEEE conference</td><td><code>IEEEtran</code></td><td>Two-column conference format</td></tr>
+            <tr><td>IEEE journal</td><td><code>IEEEtran</code></td><td>Journal format</td></tr>
+            <tr><td>ACM sigconf</td><td><code>acmart</code></td><td>Needs Libertine fonts (<code>texlive-fonts-extra</code>)</td></tr>
+            <tr><td>arXiv</td><td><code>article</code></td><td>Single-column preprint</td></tr>
+            <tr><td>AAS journals (ApJ, AJ, …)</td><td><code>AASTeX v7</code></td><td>Astronomy structure; class files bundled</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </section>
 
-    <h2><span class="num">3</span>What it does</h2>
-    <p>The skill organizes the work into five workflows, and the agent picks the right one from what you ask for &mdash; you never have to remember any of this:</p>
-    <ul class="flows">
-      <li data-k="A"><span class="k">Scaffold.</span> <code>new_paper.sh</code> creates a project for one of five venues, with section skeletons, a sample <code>references.bib</code>, and a <code>figures/</code> directory.</li>
-      <li data-k="B"><span class="k">Draft and revise.</span> Section-by-section writing against per-venue methodology; every skeleton explains what each paragraph is for.</li>
-      <li data-k="C"><span class="k">Citations.</span> BibTeX entry sourcing and hygiene; broken-citation debugging.</li>
-      <li data-k="D"><span class="k">Compile and debug.</span> <code>compile.sh</code> builds the PDF and extracts the real errors from the log in readable form.</li>
-      <li data-k="E"><span class="k">Pre-submission checks.</span> Page limits, anonymization, and camera-ready rules, per venue.</li>
-    </ul>
-    <p>Deep-dive references &mdash; writing methodology, venue style rules, BibTeX hygiene, error troubleshooting &mdash; are read only when a workflow needs them, so the agent&rsquo;s context stays on your paper.</p>
-
-    <h2><span class="num">4</span>Venues</h2>
-    <p class="caption"><span class="lbl">Table 2:</span> Bundled paper scaffolds.</p>
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr><th>Venue</th><th>Class</th><th>Notes</th></tr></thead>
-        <tbody>
-          <tr><td>IEEE conference</td><td>IEEEtran</td><td>Two-column conference format</td></tr>
-          <tr><td>IEEE journal</td><td>IEEEtran</td><td>Journal format</td></tr>
-          <tr><td>ACM sigconf</td><td>acmart</td><td>Needs Libertine fonts (<code>texlive-fonts-extra</code>)</td></tr>
-          <tr><td>arXiv</td><td>article</td><td>Single-column preprint</td></tr>
-          <tr><td>AAS journals (ApJ, AJ, &hellip;)</td><td>AASTeX v7</td><td>Astronomy chapter structure; cls/bst bundled</td></tr>
-        </tbody>
-      </table>
+  <section>
+    <div class="wrap">
+      <h2>How it works</h2>
+      <p class="lead">Install once, then just talk to your agent.</p>
+      <div class="steps">
+        <div class="step">
+          <p class="n">Step 1</p>
+          <h3>Install</h3>
+          <p>Clone and run the installer. It wires the skill into every agent it finds.</p>
+          <pre><code>./install.sh --agent claude
+<span style="color:var(--muted)"># or codex / gemini / all</span></code></pre>
+        </div>
+        <div class="step">
+          <p class="n">Step 2</p>
+          <h3>Say what you want</h3>
+          <p>"Start an IEEE conference paper on…" or "fix my citations" — the skill picks the right workflow.</p>
+          <pre><code>Start an IEEE conference paper
+on robust localization</code></pre>
+        </div>
+        <div class="step">
+          <p class="n">Step 3</p>
+          <h3>Get a compiling PDF</h3>
+          <p>The agent runs the loop — draft, cite, compile, fix — and reports pre-submission issues before you ship.</p>
+          <pre><code>compile.sh ~/papers/my-paper full
+<span style="color:var(--muted)"># full rebuild before shipping</span></code></pre>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <h2><span class="num">5</span>Requirements and availability</h2>
-    <p>Compilation needs a TeX installation (<code>pdflatex</code>, <code>bibtex</code>); <code>scripts/check_latex_env.sh</code> diagnoses a broken one. Source, issue tracker, and the full operating manual live in the repository <a class="cite" href="#refs">[1]</a>.</p>
-
-    <section class="refs" id="refs" aria-label="References">
-      <h2 class="refs-h">References</h2>
-      <p>[1] weinaike. <i>overleaf-latex-skill</i>. GitHub repository, 2026. <a href="https://github.com/weinaike/overleaf-latex-skill">github.com/weinaike/overleaf-latex-skill</a></p>
-      <p>[2] Agent Skills open standard. <a href="https://agentskills.io">agentskills.io</a></p>
-      <p>[3] Gemini CLI documentation, &ldquo;Agent Skills&rdquo;. <a href="https://geminicli.com/docs/cli/skills">geminicli.com/docs/cli/skills</a></p>
-    </section>
-  </article>
-
-  <footer class="foot">
-    <p>Typeset in HTML and CSS &mdash; no frameworks, no build step. This page follows your color scheme.</p>
-  </footer>
+  <div class="outro">
+    <div class="wrap">
+      <p>Compilation needs <code>pdflatex</code> and <code>bibtex</code> — <span class="mono">check_latex_env.sh</span> diagnoses your setup.</p>
+      <a class="gh-btn" href="https://github.com/weinaike/overleaf-latex-skill">View on GitHub</a>
+      <p>Open source. Single-file skill, no build step.</p>
+    </div>
+  </div>
 </main>
+
+<footer class="site">
+  weinaike · <a href="https://github.com/weinaike/overleaf-latex-skill">github.com/weinaike/overleaf-latex-skill</a>
+</footer>
 
 <script>
 document.querySelectorAll('.copy-btn').forEach(function(btn){
