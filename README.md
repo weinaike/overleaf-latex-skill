@@ -20,6 +20,8 @@ The skill follows the open [Agent Skills](https://agentskills.io) format (`SKILL
 
 Claude Code and Gemini CLI get a live symlink; Codex gets a **copy** (its skill discovery does not reliably follow symlinks — re-run the installer after pulling updates, and start a new Codex session). `./install.sh --remove` uninstalls. Gemini CLI can also install straight from this repo: `gemini skills install <repo-url> --path latex-paper-writing`.
 
+Landing page: <https://weinaike.github.io/overleaf-latex-skill/>
+
 Requires a TeX installation (`pdflatex`, `bibtex`) and bash. Verify with `latex-paper-writing/scripts/check_latex_env.sh`. Note: the ACM template additionally needs the Libertine fonts (`texlive-fonts-extra` on Debian/Ubuntu).
 
 ## Layout
